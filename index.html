@@ -11,14 +11,7 @@
 		//Get params via: urlParams.get('challenge')
 		// Setup
 		// TODO: disable nonsensical buttons
-		address = urlParams.get("Address")
-		if (null != urlParams.get("Street")){
-			address = urlParams.get("Street")
-			if (null != urlParams.get("House number")){
-				address = address + " "+urlParams.get("House number")
-			}
-		}
-		zimmer = urlParams.get("Rooms")
+
 		
 		function copyToClipboard(text) {
 		    var dummy = document.createElement("textarea");
@@ -51,7 +44,7 @@
 			if (form.reference.value == 'Address'){
 				messageString = messageString + ` für die Wohnung in ${form.address.value}`
 			} else if (form.reference.value == 'Number of rooms') {
-				messageString = messageString + ` für die ${zimmer}-Zimmer-Wohnung`
+				messageString = messageString + ` für die ${form.rooms.value}-Zimmer-Wohnung`
 			} else if (form.reference.value == 'Title'){
 				messageString = messageString + ` mit dem Titel "${form.title.value}"`
 			}
@@ -140,15 +133,37 @@
 		}
 
 		function OnLoad(e) {
-		    document.getElementById("title").value = urlParams.get('Title');
-		    document.getElementById("address").value = urlParams.get('Address');
-		    document.getElementById("website").value = urlParams.get('Website').substring(5);
 			// Make list items selectable
 			$('ul.select li').click(function(e){
                 var item = $(e.target);
                 selectItem(item);
             });
+			// Calculate textbox default values
+		    document.getElementById("title").value = urlParams.get('Title');
+			document.getElementById("website").value = urlParams.get('Website').substring(5);
+			if (urlParams.get("Street") != "None") {
+				document.getElementById("address").value = urlParams.get("Street")
+				selectItem($(document.getElementById("opt-address")))
+				if (urlParams.get("House number") != "None") {
+					document.getElementById("address").value += " " + urlParams.get("House number")
+				}
+			} else if (urlParams.get('Address') != "None") {
+				document.getElementById("address").value = urlParams.get('Address')
+			} else {
+				document.getElementById("address").value = ""
+			}
+		    document.getElementById("rooms").value = urlParams.get("Rooms")
 			// Select default values
+			tu = (urlParams.get("TU distance") == "None") ? 2*60*60 : urlParams.get("TU distance")
+			hu = (urlParams.get("HU distance") == "None") ? 2*60*60 : urlParams.get("HU distance")
+			hu = (urlParams.get("FU distance") == "None") ? 2*60*60 : urlParams.get("FU distance")
+			if (fu < 40*60 && hu >= 40*60 && tu >= 40*60) {
+				selectItem($(document.getElementById("opt-fu")))
+			} else if (fu >= 40*60 && hu < 40*60 && tu >= 40*60) {
+				selectItem($(document.getElementById("opt-hu")))
+			} else if (fu >= 40*60 && hu >= 40*60 && tu < 40*60) {
+				selectItem($(document.getElementById("opt-tu")))
+			}
 			$('ul.select li.selected').each(function(idx){selectItem($(this));});
 		}
 		window.onload = OnLoad
@@ -231,16 +246,18 @@
 		<b>Title:</b><br>
 		<input type="text" id="title" value="[MISSING]"><br>
 		<b>Website:</b><br>
-		<input type="text" id="website" value="[MISSING]"><br><br>
+		<input type="text" id="website" value="[MISSING]"><br>
 		<b>Address:</b><br>
-		<input type="text" id="address" value="[MISSING]"><br><br>
+		<input type="text" id="address" value="[MISSING]"><br>
+		<b>Number of rooms:</b><br>
+		<input type="text" id="rooms" value=""><br><br>
 		<b>Reference:</b><br>
 		<input id="reference" type="hidden" name="reference">
 		<ul class="select" data-storage="reference">
-			<li class="selected">Address</li>
-			<li>Number of rooms</li>
-			<li>Title</li>
-			<li>[Skip]</li>
+			<li id="opt-address">Address</li>
+			<li id="opt-zimmer">Number of rooms</li>
+			<li id="opt-title">Title</li>
+			<li class="selected">[Skip]</li>
 		</ul>
 		<b>Reference website?</b><br>
 		<input id="refweb" type="hidden" name="refweb">
@@ -264,9 +281,9 @@
 		<input id="close" type="hidden" name="close">
 		<ul class="select" data-storage="close">
 			<li class="selected">All</li>
-			<li>FU</li>
-			<li>TU</li>
-			<li>HU</li>
+			<li id="opt-fu">FU</li>
+			<li id="opt-tu">TU</li>
+			<li id="opt-hu">HU</li>
 		</ul>
 		<b>What do we like?</b><br>
 		<input type="checkbox" id="balcony" name="balcony">
