@@ -237,7 +237,15 @@
 			} else {
 				document.getElementById("address").value = ""
 			}
-		    document.getElementById("rooms").value = urlParams.get("Rooms")
+
+			var rms = urlParams.get("Rooms")
+			if (rms == "None") {
+				document.getElementById("rooms").value = ""
+			} else if (rms.endsWith(".0")) {
+				document.getElementById("rooms").value = rms.substring(0, rms.length-2)
+			} else {
+				document.getElementById("rooms").value = rms
+			}
 			// Select default values
 			var tu = ((urlParams.get("TU distance") == "None") ? 2*60*60 : urlParams.get("TU distance"))
 			var hu = ((urlParams.get("HU distance") == "None") ? 2*60*60 : urlParams.get("HU distance"))
