@@ -72,14 +72,14 @@
 			}
 
 			messageString = messageString + " Besonders attraktiv finden wir "
-
-			if (form.close.value == "All"){
+			
+			if (form.closest.value == "All"){
 				messageString = messageString + "die Nähe zu den drei großen Universitäten, die wir besuchen"
-			} else if (form.close.value == "FU"){
+			} else if (form.closest.value == "FU"){
 				messageString = messageString + "die Nähe zur Freie Universität"
-			} else if (form.close.value == "TU"){
+			} else if (form.closest.value == "TU"){
 				messageString = messageString + "die Nähe zur Technische Universität"
-			} else if (form.close.value == "HU"){
+			} else if (form.closest.value == "HU"){
 				messageString = messageString + "die Nähe zur Humboldt Universität"
 			}
 
@@ -122,8 +122,93 @@
 			document.getElementById("editor").innerText = messageString;
 			toClipboard()
 		}
+
 		function englishText(form){
-			// TODO
+			// Produce message:
+			var messageString = `Dear ${form.recipient.value},\n\n`+
+			`We are looking for a home as scholarship holders in a joint `+
+			`PhD program lasting at least 5 years, and would likely prefer `+
+			`to stay afterwards as well. Hence your advertisement`
+
+			if (form.reference.value == 'Address'){
+				messageString = messageString + ` for the apartment in ${form.address.value}`
+			} else if (form.reference.value == 'Number of rooms') {
+				messageString = messageString + ` for the ${form.rooms.value}-room apartment`
+			} else if (form.reference.value == 'Title'){
+				messageString = messageString + ` titled "${form.title.value}"`
+			}
+
+			if (form.refweb.value == 'Yes'){
+				messageString = messageString + ` on ${form.website.value}`
+			}
+
+			messageString = messageString + " has caught our attention."
+
+			if (form.blueprint.value == 'Yes'){
+				messageString = messageString + " If possible, we would be interested in seeing the floorplan of the apartment."
+			}
+
+			messageString = messageString +"\n\nOur essentially unconditional "+
+			"contracts provide a stable source of income. We are non-smokers, "+
+			"pet free, calm, and introverted. Moreover, all three of us specialize "+
+			"in mathematics so we study a lot, and we consequently seek a home "+
+			"where we can do so in peace."
+
+			if (form.calm.value == 'Yes'){
+				messageString = messageString + " Your neighborhood seems to provide the calm environment necessary for that."
+			} else {
+				messageString = messageString + " We hope your apartment can provide the calm environment necessary for that."
+			}
+
+			messageString = messageString + " We especially find "
+
+			if (form.closest.value == "All"){
+				messageString = messageString + "the proximity of the three major universities that we attend"
+			} else if (form.closest.value == "FU"){
+				messageString = messageString + "the proximity of Freie Universität"
+			} else if (form.closest.value == "TU"){
+				messageString = messageString + "the proximity of Technische Universität"
+			} else if (form.closest.value == "HU"){
+				messageString = messageString + "the proximity of Humboldt Universität"
+			}
+
+			var goodies = [];
+			if (form.balcony.checked){
+				goodies.push("the balcony")
+			}
+			if (form.balconies.checked){
+				goodies.push("the balconies")
+			}
+			if (form.washingmachine.checked){
+				goodies.push("the washing machine")
+			}
+			if (form.ebk.checked){
+				goodies.push("the fitted kitchen")
+			}
+			for (let i = 0; i < goodies.length; i++) {
+				messageString = messageString + ", "
+				if (i == goodies.length - 1){
+					messageString = messageString + "and "
+				}
+				messageString = messageString + goodies[i]
+			}
+
+			messageString = messageString + " attractive.\n\n"+
+			"The decade old friendship between us means that we trust "+
+			"each other to maintain a conventionally high standard of "+
+			"order and cleanliness, which we highly desire after our "+
+			"experiences with shared accommodations with others."+
+			"\n\n"+
+			"Finally, after our past years in Berlin we are convinced "+
+			"that we can get everything sorted out in German. However, "+
+			"in the future communication in English would be preferred."+
+			"\n\n"+
+			"Yours sincerely,\n"+
+			"Adam Schweitzer"
+
+			// Add message to editor:
+			document.getElementById("editor").innerText = messageString;
+			toClipboard()
 		}
 
 		function selectItem(item) {
@@ -154,9 +239,10 @@
 			}
 		    document.getElementById("rooms").value = urlParams.get("Rooms")
 			// Select default values
-			tu = (urlParams.get("TU distance") == "None") ? 2*60*60 : urlParams.get("TU distance")
-			hu = (urlParams.get("HU distance") == "None") ? 2*60*60 : urlParams.get("HU distance")
-			hu = (urlParams.get("FU distance") == "None") ? 2*60*60 : urlParams.get("FU distance")
+			var tu = ((urlParams.get("TU distance") == "None") ? 2*60*60 : urlParams.get("TU distance"))
+			var hu = ((urlParams.get("HU distance") == "None") ? 2*60*60 : urlParams.get("HU distance"))
+			var fu = ((urlParams.get("FU distance") == "None") ? 2*60*60 : urlParams.get("FU distance"))
+			console.log("rshgerh")
 			if (fu < 40*60 && hu >= 40*60 && tu >= 40*60) {
 				selectItem($(document.getElementById("opt-fu")))
 			} else if (fu >= 40*60 && hu < 40*60 && tu >= 40*60) {
@@ -278,8 +364,8 @@
 			<li class="selected">No</li>
 		</ul>
 		<b>Close to?</b><br>
-		<input id="close" type="hidden" name="close">
-		<ul class="select" data-storage="close">
+		<input id="closest" type="hidden" name="closest">
+		<ul class="select" data-storage="closest">
 			<li class="selected">All</li>
 			<li id="opt-fu">FU</li>
 			<li id="opt-tu">TU</li>
@@ -297,7 +383,7 @@
 
 		<div class="btns">
 			<input type="button" name="german" value="German" onClick="germanText(this.form)">
-			<input type="button" name="english" value="English" onClick="germanText(this.form)">
+			<input type="button" name="english" value="English" onClick="englishText(this.form)">
 			<input type="button" name="clear" value="Clear textbox" onClick="document.getElementById('editor').innerText=''">
 		</div>
 	</form><br><br>
