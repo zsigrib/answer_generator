@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<head>
+	<script type="text/javascript">
+
+		const queryString = window.location.search;//"Website=CrawlImmoscout&Timestamp=2023-06-06+23%3A48%3A13.776813&Title=None&Bezirk=Tempelhof-Schöneberg&Ortsteil=Schöneberg&PLZ=12159&Street=Wielandstraße&Address=Wielandstrasse+4+12159+Berlin&Longitude=13.3389576&Latitude=52.4736649&Kaltmiete=None&Warmmiete=None&Nebenkosten=None&Rooms=None&Bedrooms=None&Bathrooms=None&m2=None&Type=None&Heating+costs=None&House+number=4&Floor+number=None&FU+distance=1940.978319308088&HU+distance=3219.7368421052633&TU+distance=2323.4333606741934&Closest+Bahnhof=Friedenau&Closest+supermarket=LPG+BioMarkt&Closest+tram=Lüneburger+Straße&Heating+type=None&Heating+source=None&Distance+to+Bahnhof=580.15&Distance+to+supermarket=328.48&Distance+to+tram=6335.51&Move+in+from=None"//
+		console.log(queryString);
+		// example query string:  ?product=shirt&color=blue&newuser&size=m
+		const urlParams = new URLSearchParams(queryString)
+		//Get params via: urlParams.get('challenge')
+		//var WebApp=window.Telegram.WebApp
+		//WebApp.expand()
+		//WebApp.ready()
+		// Setup
+		// TODO: disable nonsensical buttons
+		address = urlParams.get("Address")
+		if (null != urlParams.get("Street")){
+			address = urlParams.get("Street")
+			if (null != urlParams.get("House number")){
+				address = address + " "+urlParams.get("House number")
+			}
+		}
+		zimmer = urlParams.get("Rooms")
+		
+		function copyToClipboard(text) {
+		    var dummy = document.createElement("textarea");
+		    // to avoid breaking orgain page when copying more words
+		    // cant copy when adding below this code
+		    // dummy.style.display = 'none'
+		    document.body.appendChild(dummy);
+		    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+		    dummy.value = text;
+		    dummy.select();
+		    document.execCommand("copy");
+		    document.body.removeChild(dummy);
+		}
+		
+
+		function toClipboard(){
+			// Select the text field & copy to clipboard:
+			var editorElem = document.getElementById("editor");
+			copyToClipboard(editorElem.innerText)
+		}
+
+		function germanText(form){
+			// Produce message:
+			var messageString = `Sehr geehrte ${form.recipient.value},\n\n`+
+			`Wir suchen ein Zuhause als Stipendiaten in einem gemeinsamen `+
+			`Promotionsprogramm (der dauert mindestens 5 Jahre) und würden `+
+			`wahrscheinlich auch danach gerne bleiben. Aus diesem Grund hat `+
+			`uns Ihre Anzeige`
+
+			if (form.introduction.value == 'Address'){
+				messageString = messageString + ` für die Wohnung in ${form.address.value}`
+			} else if (form.introduction.value == 'Zimmer') {
+				messageString = messageString + ` für die ${zimmer}-Zimmer-Wohnung`
+			} else if (form.introduction.value == 'Title'){
+				messageString = messageString + ` mit dem Titel "${form.title.value}"`
+			}
+
+			if (form.refweb.value == 'yes'){
+				messageString = messageString + ` auf ${form.website.value}`
+			}
+
+			messageString = messageString + " aufmerksam gemacht."
+
+			if (form.blueprint.value == 'yes'){
+				messageString = messageString + " Wenn möglich, würden wir uns für den Grundriss interessieren."
+			}
+
+			messageString = messageString +"\n\nUnsere im Wesentlichen bedingungslosen "+
+			"Verträge bieten ein sicheres Einkommen. Wir sind Nichtraucher, haustierfrei, "+
+			"ruhig und introvertiert. Darüber hinaus spezialisieren wir uns alle drei auf "+
+			"Mathematik, so dass wir viel studieren, und deshalb suchen wir ein Zuhause, "+
+			"wo wir dies in Ruhe tun können."
+
+			if (form.calm.value == 'yes'){
+				messageString = messageString + " Ihres Stadtviertel scheint die dafür notwendige ruhige Umgebung zu bieten."
+			} else {
+				messageString = messageString + " Wir hoffen, dass Ihre Wohnung die dafür notwendige ruhige Umgebung bietet."
+			}
+
+			messageString = messageString + " Besonders attraktiv finden wir "
+
+			if (form.close.value == "All"){
+				messageString = messageString + "die Nähe zu den drei großen Universitäten, die wir besuchen"
+			} else if (form.close.value == "FU"){
+				messageString = messageString + "die Nähe zur Freie Universität"
+			} else if (form.close.value == "TU"){
+				messageString = messageString + "die Nähe zur Technische Universität"
+			} else if (form.close.value == "HU"){
+				messageString = messageString + "die Nähe zur Humboldt Universität"
+			}
+
+			var goodies = [];
+			if (form.balcony.checked){
+				goodies.push("den Balkon")
+			}
+			if (form.balconies.checked){
+				goodies.push("die Balkone")
+			}
+			if (form.washingmachine.checked){
+				goodies.push("die Waschmaschine")
+			}
+			if (form.ebk.checked){
+				goodies.push("die Einbauküche")
+			}
+			for (let i = 0; i < goodies.length; i++) {
+				messageString = messageString + ", "
+				if (i == goodies.length - 1){
+					messageString = messageString + "und "
+				}
+				messageString = messageString + goodies[i]
+			}
+
+			messageString = messageString + ".\n\n"+
+			"Die jahrzehntelange Freundschaft "+
+			"zwischen uns bedeutet, dass wir uns gegenseitig vertrauen, einen "+
+			"konventionell hohen Standard an Ordnung und Sauberkeit aufrechtzuerhalten, "+
+			"den wir uns nach unseren Erfahrungen mit Wohngemeinschaften mit anderen "+
+			"sehr wünschen."+
+			"\n\n"+
+			"Schließlich sind wir nach den letzten Jahren in Berlin "+
+			"überzeugt, dass wir alles auf Deutsch regeln können. Künftig soll jedoch "+
+			"die Kommunikation auf Englisch bevorzugt werden."+
+			"\n\n"+
+			"Mit freundlichen Grüßen,\n"+
+			"Adam Schweitzer"
+
+			// Add message to editor:
+			document.getElementById("editor").innerText = messageString;
+			toClipboard()
+		}
+		function englishText(form){
+			// TODO
+		}
+
+
+		window.onload=(function() {
+		    document.getElementById("title").value = urlParams.get('Title');
+		    document.getElementById("address").value = urlParams.get('Address');
+		    document.getElementById("website").value = urlParams.get('Website').substring(5);
+		});
+
+		//function exitWebApp(shouldCopy){
+		//	if (shouldCopy) {
+		//		toClipboard()
+		//	}
+		//	WebApp.close()
+		
+	</script>
+	<style>
+		select {
+			display:table-row;
+		}
+		option {
+			display:table-cell;
+			text-align:center;
+		}
+		.textarea {
+			border: 1px solid #ccc;
+			padding: 1px 6px;
+			display: block;
+			width: 100%;
+			overflow: hidden;
+			resize: both;
+			min-height: 40px;
+			line-height: 20px;
+		}
+	</style>
+</head>
+<body>
+	<form name="data" action="" method="GET">
+		<b>Recipient:</b><br>
+		<input type="text" id="recipient" value="Damen und Herren"><br>
+		<b>Title:</b><br>
+		<input type="text" id="title" value="[MISSING]"><br>
+		<b>Website:</b><br>
+		<input type="text" id="website" value="[MISSING]"><br><br>
+		<b>Address:</b><br>
+		<input type="text" id="address" value="[MISSING]"><br><br>
+		<b>Reference:</b><br>
+		<select id="introduction" name="introduction" size="1" multiple>
+			<option value="Address">Address</option>
+			<option value="Zimmer">Number of rooms</option>
+			<option value="Title">Title</option>
+			<option value="Skip" selected>[Skip]</option>
+		</select><br>
+		<b>Reference website?</b><br>
+		<select id="refweb" name="refweb" size="1" multiple>
+			<option value="no" selected>No</option>
+			<option value="yes">Yes</option>
+		</select><br>
+		<b>Ask for blueprint?</b><br>
+		<select id="blueprint" name="blueprint" size="1" multiple>
+			<option value="no" selected>No</option>
+			<option value="yes">Yes</option>
+		</select><br>
+		<b>Is neighborhood calm?</b><br>
+		<select id="calm" name="calm" size="1" multiple>
+			<option value="no" selected>No</option>
+			<option value="yes">Yes</option>
+		</select><br>
+		<b>Close to?</b><br>
+		<select id="close" name="close" size="1" multiple>
+			<option value="All" selected>All</option>
+			<option value="FU">FU</option>
+			<option value="TU">TU</option>
+			<option value="HU">HU</option>
+		</select><br>
+		<b>What do we like?</b><br>
+		<input type="checkbox" name="balcony"><label for="balcony">the balcon<b>y</b></label><br>
+		<input type="checkbox" name="balconies"><label for="balconies">the balcon<b>ies</b></label><br>
+		<input type="checkbox" name="washingmachine"><label for="washingmachine">the washing machine</label><br>
+		<input type="checkbox" name="ebk" checked><label for="ebk">the fitted kitchen</label><br>
+
+		<input type="button" name="german" value="German" onClick="germanText(this.form)">
+		<input type="button" name="english" value="English" onClick="germanText(this.form)">
+		<input type="button" name="clear" value="Clear textbox" onClick="document.getElementById('editor').innerText=''">
+	</form><br><br>
+	
+	<span class="textarea" id="editor" role="textbox" contenteditable>[DUMMY TEXT]</span>
+	<br><br>
+	<button onclick="toClipboard();window.close()">Copy &amp; Exit</button>
+	<button onclick="window.close()">Just Exit</button>
+
+
+
+</body>
