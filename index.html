@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script type="text/javascript">
 
 		const queryString = window.location.search;//"Website=CrawlImmoscout&Timestamp=2023-06-06+23%3A48%3A13.776813&Title=None&Bezirk=Tempelhof-Schöneberg&Ortsteil=Schöneberg&PLZ=12159&Street=Wielandstraße&Address=Wielandstrasse+4+12159+Berlin&Longitude=13.3389576&Latitude=52.4736649&Kaltmiete=None&Warmmiete=None&Nebenkosten=None&Rooms=None&Bedrooms=None&Bathrooms=None&m2=None&Type=None&Heating+costs=None&House+number=4&Floor+number=None&FU+distance=1940.978319308088&HU+distance=3219.7368421052633&TU+distance=2323.4333606741934&Closest+Bahnhof=Friedenau&Closest+supermarket=LPG+BioMarkt&Closest+tram=Lüneburger+Straße&Heating+type=None&Heating+source=None&Distance+to+Bahnhof=580.15&Distance+to+supermarket=328.48&Distance+to+tram=6335.51&Move+in+from=None"//
@@ -7,9 +8,6 @@
 		// example query string:  ?product=shirt&color=blue&newuser&size=m
 		const urlParams = new URLSearchParams(queryString)
 		//Get params via: urlParams.get('challenge')
-		//var WebApp=window.Telegram.WebApp
-		//WebApp.expand()
-		//WebApp.ready()
 		// Setup
 		// TODO: disable nonsensical buttons
 		address = urlParams.get("Address")
@@ -49,21 +47,21 @@
 			`wahrscheinlich auch danach gerne bleiben. Aus diesem Grund hat `+
 			`uns Ihre Anzeige`
 
-			if (form.introduction.value == 'Address'){
+			if (form.reference.value == 'Address'){
 				messageString = messageString + ` für die Wohnung in ${form.address.value}`
-			} else if (form.introduction.value == 'Zimmer') {
+			} else if (form.reference.value == 'Number of rooms') {
 				messageString = messageString + ` für die ${zimmer}-Zimmer-Wohnung`
-			} else if (form.introduction.value == 'Title'){
+			} else if (form.reference.value == 'Title'){
 				messageString = messageString + ` mit dem Titel "${form.title.value}"`
 			}
 
-			if (form.refweb.value == 'yes'){
+			if (form.refweb.value == 'Yes'){
 				messageString = messageString + ` auf ${form.website.value}`
 			}
 
 			messageString = messageString + " aufmerksam gemacht."
 
-			if (form.blueprint.value == 'yes'){
+			if (form.blueprint.value == 'Yes'){
 				messageString = messageString + " Wenn möglich, würden wir uns für den Grundriss interessieren."
 			}
 
@@ -73,7 +71,7 @@
 			"Mathematik, so dass wir viel studieren, und deshalb suchen wir ein Zuhause, "+
 			"wo wir dies in Ruhe tun können."
 
-			if (form.calm.value == 'yes'){
+			if (form.calm.value == 'Yes'){
 				messageString = messageString + " Ihres Stadtviertel scheint die dafür notwendige ruhige Umgebung zu bieten."
 			} else {
 				messageString = messageString + " Wir hoffen, dass Ihre Wohnung die dafür notwendige ruhige Umgebung bietet."
@@ -134,28 +132,27 @@
 			// TODO
 		}
 
+		function selectItem(item) {
+			item.addClass('selected');
+			item.siblings().removeClass('selected');
+			$(`#${item.parent().attr("data-storage")}`).val(item.text());
+		}
 
-		window.onload=(function() {
+		function OnLoad(e) {
 		    document.getElementById("title").value = urlParams.get('Title');
 		    document.getElementById("address").value = urlParams.get('Address');
 		    document.getElementById("website").value = urlParams.get('Website').substring(5);
-		});
-
-		//function exitWebApp(shouldCopy){
-		//	if (shouldCopy) {
-		//		toClipboard()
-		//	}
-		//	WebApp.close()
-		
+			// Make list items selectable
+			$('ul.select li').click(function(e){
+                var item = $(e.target);
+                selectItem(item);
+            });
+			// Select default values
+			$('ul.select li.selected').each(function(idx){selectItem($(this));});
+		}
+		window.onload = OnLoad
 	</script>
 	<style>
-		select {
-			display:table-row;
-		}
-		option {
-			display:table-cell;
-			text-align:center;
-		}
 		.textarea {
 			border: 1px solid #ccc;
 			padding: 1px 6px;
@@ -165,6 +162,32 @@
 			resize: both;
 			min-height: 40px;
 			line-height: 20px;
+		}
+		ul.select {
+			display: flex;
+			flex-direction: row;
+			list-style: none;
+			margin:  0;
+			padding: 0px;
+		}
+
+		ul.select li {
+			display: flex;
+			flex-grow: 1;
+			justify-content: center;
+			text-align:center;
+			border-style: solid;
+			border-width: 1px;
+			border-radius: 5px;
+			margin: 2px;
+			padding: 2px 6px;
+		}
+		ul.select li:hover {
+			cursor: pointer;
+		}
+		ul.select li.selected {
+			background-color: blue;
+			color: white;
 		}
 	</style>
 </head>
@@ -179,39 +202,48 @@
 		<b>Address:</b><br>
 		<input type="text" id="address" value="[MISSING]"><br><br>
 		<b>Reference:</b><br>
-		<select id="introduction" name="introduction" size="1" multiple>
-			<option value="Address">Address</option>
-			<option value="Zimmer">Number of rooms</option>
-			<option value="Title">Title</option>
-			<option value="Skip" selected>[Skip]</option>
-		</select><br>
+		<input id="reference" type="hidden" name="reference">
+		<ul class="select" data-storage="reference">
+			<li class="selected">Address</li>
+			<li>Number of rooms</li>
+			<li>Title</li>
+			<li>[Skip]</li>
+		</ul>
 		<b>Reference website?</b><br>
-		<select id="refweb" name="refweb" size="1" multiple>
-			<option value="no" selected>No</option>
-			<option value="yes">Yes</option>
-		</select><br>
+		<input id="refweb" type="hidden" name="refweb">
+		<ul class="select" data-storage="refweb">
+			<li>Yes</li>
+			<li class="selected">No</li>
+		</ul>
 		<b>Ask for blueprint?</b><br>
-		<select id="blueprint" name="blueprint" size="1" multiple>
-			<option value="no" selected>No</option>
-			<option value="yes">Yes</option>
-		</select><br>
+		<input id="blueprint" type="hidden" name="blueprint">
+		<ul class="select" data-storage="blueprint">
+			<li>Yes</li>
+			<li class="selected">No</li>
+		</ul>
 		<b>Is neighborhood calm?</b><br>
-		<select id="calm" name="calm" size="1" multiple>
-			<option value="no" selected>No</option>
-			<option value="yes">Yes</option>
-		</select><br>
+		<input id="calm" type="hidden" name="calm">
+		<ul class="select" data-storage="calm">
+			<li>Yes</li>
+			<li class="selected">No</li>
+		</ul>
 		<b>Close to?</b><br>
-		<select id="close" name="close" size="1" multiple>
-			<option value="All" selected>All</option>
-			<option value="FU">FU</option>
-			<option value="TU">TU</option>
-			<option value="HU">HU</option>
-		</select><br>
+		<input id="close" type="hidden" name="close">
+		<ul class="select" data-storage="close">
+			<li class="selected">All</li>
+			<li>FU</li>
+			<li>TU</li>
+			<li>HU</li>
+		</ul>
 		<b>What do we like?</b><br>
-		<input type="checkbox" name="balcony"><label for="balcony">the balcon<b>y</b></label><br>
-		<input type="checkbox" name="balconies"><label for="balconies">the balcon<b>ies</b></label><br>
-		<input type="checkbox" name="washingmachine"><label for="washingmachine">the washing machine</label><br>
-		<input type="checkbox" name="ebk" checked><label for="ebk">the fitted kitchen</label><br>
+		<input type="checkbox" id="balcony" name="balcony">
+		<label for="balcony">the balcon<b>y</b></label><br>
+		<input type="checkbox" id="balconies" name="balconies">
+		<label for="balconies">the balcon<b>ies</b></label><br>
+		<input type="checkbox" id="washingmachine" name="washingmachine">
+		<label for="washingmachine">the washing machine</label><br>
+		<input type="checkbox" id="ebk" name="ebk" checked>
+		<label for="ebk">the fitted kitchen</label><br>
 
 		<input type="button" name="german" value="German" onClick="germanText(this.form)">
 		<input type="button" name="english" value="English" onClick="germanText(this.form)">
@@ -222,7 +254,4 @@
 	<br><br>
 	<button onclick="toClipboard();window.close()">Copy &amp; Exit</button>
 	<button onclick="window.close()">Just Exit</button>
-
-
-
 </body>
