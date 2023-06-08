@@ -258,10 +258,10 @@
 				} 
 			}
 
-			if(urlParams.get("Salutation")=="FEMALE"){
+			if(urlParams.get("Salutation")=="FEMALE" && (urlParams.get("Lastname")!="None" || urlParams.get("Lastname")!="Privat")){
 				selectItem($(document.getElementById("sal-female")))
 			}
-			if(urlParams.get("Salutation")=="MALE"){
+			if(urlParams.get("Salutation")=="MALE" && (urlParams.get("Lastname")!="None" || urlParams.get("Lastname")!="Privat")){
 				selectItem($(document.getElementById("sal-male")))
 			}
 
