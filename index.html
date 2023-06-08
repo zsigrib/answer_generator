@@ -351,22 +351,31 @@
 			border-style: solid;
 			border-color: #ccc;
 		}
-		input[type="checkbox"] {
-			width: 20px;
-			height: 20px;
-			margin: 5px 2px;
-
-			accent-color: blue;
+		input[type=checkbox]+label {
 			display: flex;
 			flex-grow: 1;
-		}
-		label {
-		  	font-size: 16px;
 
-			display: flex;
-			flex-grow: 1;
-			align-self: center;
+			text-align: center;
+			justify-content: center;
+
+			color: #ccc;
+			font-style: italic;
+			border-width: 2px;
+			border-style: solid;
+			border-color: #ccc;
+			margin: 2px;
+			padding: 2px 6px;
 		}
+		input[type=checkbox]:checked+label {
+			color: #fff;
+			background-color: blue;
+			font-style: normal;
+		}
+		.hidden {
+			position: absolute;
+			visibility: hidden;
+			opacity: 0;
+		}	
 	</style>
 </head>
 <body>
@@ -425,13 +434,13 @@
 
 
 		<ul class="select" data-storage="closest">
-			<input type="checkbox" id="balcony" name="balcony">
+			<input type="checkbox" id="balcony" name="balcony" class="hidden">
 			<label for="balcony">balcon<b>y</b></label>
-			<input type="checkbox" id="balconies" name="balconies">
+			<input type="checkbox" id="balconies" name="balconies" class="hidden">
 			<label for="balconies">balcon<b>ies</b></label>
-			<input type="checkbox" id="washingmachine" name="washingmachine">
+			<input type="checkbox" id="washingmachine" name="washingmachine" class="hidden">
 			<label for="washingmachine">washing machine</label>
-			<input type="checkbox" id="ebk" name="ebk" checked>
+			<input type="checkbox" id="ebk" name="ebk" checked class="hidden">
 			<label for="ebk">fitted kitchen</label>
 		</ul>
 
