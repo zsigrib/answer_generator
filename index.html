@@ -10,16 +10,16 @@
 		//Get params via: urlParams.get('challenge')
 		// Setup
 		function copyToClipboard(text) {
-		    var dummy = document.createElement("textarea");
-		    // to avoid breaking orgain page when copying more words
-		    // cant copy when adding below this code
-		    // dummy.style.display = 'none'
-		    document.body.appendChild(dummy);
-		    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
-		    dummy.value = text;
-		    dummy.select();
-		    document.execCommand("copy");
-		    document.body.removeChild(dummy);
+			var dummy = document.createElement("textarea");
+			// to avoid breaking orgain page when copying more words
+			// cant copy when adding below this code
+			// dummy.style.display = 'none'
+			document.body.appendChild(dummy);
+			//Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+			dummy.value = text;
+			dummy.select();
+			document.execCommand("copy");
+			document.body.removeChild(dummy);
 		}
 
 		function toClipboard(){
@@ -29,8 +29,16 @@
 		}
 
 		function germanText(form){
+			//Calculate salutation
+			salutation=""
+			if(form.salutation.value=="Add male salutation"){
+				salutation="Herr "
+			}
+			if(form.salutation.value=="Add female salutation"){
+				salutation="Frau "
+			}
 			// Produce message:
-			var messageString = `Sehr geehrte ${form.recipient.value},\n\n`+
+			var messageString = `Sehr geehrte ${salutation}${form.recipient.value},\n\n`+
 			`Wir suchen ein Zuhause als Stipendiaten in einem gemeinsamen `+
 			`Promotionsprogramm (der dauert mindestens 5 Jahre) und würden `+
 			`wahrscheinlich auch danach gerne bleiben. Aus diesem Grund hat `+
@@ -119,8 +127,16 @@
 		}
 
 		function englishText(form){
+			//Calculate salutation
+			salutation=""
+			if(form.salutation.value=="Add male salutation"){
+				salutation="Mr. "
+			}
+			if(form.salutation.value=="Add female salutation"){
+				salutation="Ms. "
+			}
 			// Produce message:
-			var messageString = `Dear ${form.recipient.value},\n\n`+
+			var messageString = `Dear ${salutation}${form.recipient.value},\n\n`+
 			`We are looking for a home as scholarship holders in a joint `+
 			`PhD program lasting at least 5 years, and would likely prefer `+
 			`to stay afterwards as well. Hence your advertisement`
@@ -215,11 +231,11 @@
 		function OnLoad(e) {
 			// Make list items selectable
 			$('ul.select li').click(function(e){
-                var item = $(e.target);
-                selectItem(item);
-            });
+				var item = $(e.target);
+				selectItem(item);
+			});
 			// Calculate textbox default values
-		    document.getElementById("title").value = urlParams.get('Title');
+			document.getElementById("title").value = urlParams.get('Title');
 			document.getElementById("website").value = urlParams.get('Website').substring(5);
 			if (urlParams.get("Street") != "None") {
 				document.getElementById("address").value = urlParams.get("Street")
@@ -233,6 +249,23 @@
 				document.getElementById("address").value = ""
 			}
 
+			if(urlParams.get("Lastname")!="None"){
+				if(urlParams.get("Lastname")=="Privat" && urlParams.get("Firstname")!="None"){
+					document.getElementById("recipient").value=urlParams.get("Firstname")
+				}
+				else{
+					document.getElementById("recipient").value=urlParams.get("Lastname")	
+				} 
+			}
+
+			if(urlParams.get("Salutation")=="FEMALE"){
+				selectItem($(document.getElementById("sal-female")))
+			}
+			if(urlParams.get("Salutation")=="MALE"){
+				selectItem($(document.getElementById("sal-male")))
+			}
+
+
 			var rms = urlParams.get("Rooms")
 			if (rms == "None") {
 				document.getElementById("rooms").value = ""
@@ -245,7 +278,7 @@
 			var tu = ((urlParams.get("TU distance") == "None") ? 2*60*60 : urlParams.get("TU distance"))
 			var hu = ((urlParams.get("HU distance") == "None") ? 2*60*60 : urlParams.get("HU distance"))
 			var fu = ((urlParams.get("FU distance") == "None") ? 2*60*60 : urlParams.get("FU distance"))
-			console.log("rshgerh")
+			
 			if (fu < 40*60 && hu >= 40*60 && tu >= 40*60) {
 				selectItem($(document.getElementById("opt-fu")))
 			} else if (fu >= 40*60 && hu < 40*60 && tu >= 40*60) {
@@ -320,11 +353,19 @@
 		}
 		input[type="checkbox"] {
 			width: 20px;
-        	height: 20px;
+			height: 20px;
 			margin: 5px 2px;
+
+			accent-color: blue;
+			display: flex;
+			flex-grow: 1;
 		}
 		label {
-			font-size: 16px;
+		  	font-size: 16px;
+
+			display: flex;
+			flex-grow: 1;
+			align-self: center;
 		}
 	</style>
 </head>
@@ -332,6 +373,12 @@
 	<form name="data" action="" method="GET">
 		<b>Recipient:</b><br>
 		<input type="text" id="recipient" value="Damen und Herren"><br>
+		<input id="salutation" type="hidden" name="salutation">
+		<ul class="select" data-storage="salutation">
+			<li id="sal-male">Add male salutation</li>
+			<li id="sal-female">Add female salutation</li>
+			<li class="selected">[Skip]</li>
+		</ul>
 		<b>Title:</b><br>
 		<input type="text" id="title" value="[MISSING]"><br>
 		<b>Website:</b><br>
@@ -375,14 +422,20 @@
 			<li id="opt-hu">HU</li>
 		</ul>
 		<b>What do we like?</b><br>
-		<input type="checkbox" id="balcony" name="balcony">
-		<label for="balcony">the balcon<b>y</b></label><br>
-		<input type="checkbox" id="balconies" name="balconies">
-		<label for="balconies">the balcon<b>ies</b></label><br>
-		<input type="checkbox" id="washingmachine" name="washingmachine">
-		<label for="washingmachine">the washing machine</label><br>
-		<input type="checkbox" id="ebk" name="ebk" checked>
-		<label for="ebk">the fitted kitchen</label><br>
+
+
+		<ul class="select" data-storage="closest">
+			<input type="checkbox" id="balcony" name="balcony">
+			<label for="balcony">balcon<b>y</b></label>
+			<input type="checkbox" id="balconies" name="balconies">
+			<label for="balconies">balcon<b>ies</b></label>
+			<input type="checkbox" id="washingmachine" name="washingmachine">
+			<label for="washingmachine">washing machine</label>
+			<input type="checkbox" id="ebk" name="ebk" checked>
+			<label for="ebk">fitted kitchen</label>
+		</ul>
+
+		<br><br>
 
 		<div class="btns">
 			<input type="button" name="german" value="German" onClick="germanText(this.form)">
