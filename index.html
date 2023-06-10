@@ -44,10 +44,29 @@
 			`wahrscheinlich auch danach gerne bleiben. Aus diesem Grund hat `+
 			`uns Ihre Anzeige`
 
+			// > Process multiflat
+			var wohnung = ""
+			if (form.multiflat.value == 'One flat') {
+				wohnung = "Wohnung"
+			} else {
+				wohnung = "Wohnungen"
+			}
+			var rooms = form.rooms.value
+			if (form.multiflat.value == "Multiple flats") {
+				if (document.getElementById("min-rooms").value != "" && document.getElementById("max-rooms").value != ""){
+					if (document.getElementById("min-rooms").value == document.getElementById("max-rooms").value) {
+						rooms = `${document.getElementById("min-rooms").value}`
+					} else {
+						rooms = `${document.getElementById("min-rooms").value}- bis ${document.getElementById("max-rooms").value}`
+					}
+				}
+			}
+
+			// Add introduction
 			if (form.reference.value == 'Address'){
-				messageString = messageString + ` für die Wohnung in ${form.address.value}`
+				messageString = messageString + ` für die ${wohnung} in ${form.address.value}`
 			} else if (form.reference.value == 'Number of rooms') {
-				messageString = messageString + ` für die ${form.rooms.value}-Zimmer-Wohnung`
+				messageString = messageString + ` für die ${rooms}-Zimmer-${wohnung}`
 			} else if (form.reference.value == 'Title'){
 				messageString = messageString + ` mit dem Titel "${form.title.value}"`
 			}
@@ -65,8 +84,13 @@
 			messageString = messageString +"\n\nUnsere im Wesentlichen bedingungslosen "+
 			"Verträge bieten ein sicheres Einkommen. Wir sind Nichtraucher, haustierfrei, "+
 			"ruhig und introvertiert. Darüber hinaus spezialisieren wir uns alle drei auf "+
-			"Mathematik, so dass wir viel studieren, und deshalb suchen wir ein Zuhause, "+
-			"wo wir dies in Ruhe tun können."
+			"Mathematik, so dass wir viel studieren, und deshalb suchen wir ein"
+			if (form.multiflat.value == "One flat"){
+				messageString = messageString +" Zuhause"
+			} else {
+				messageString = messageString +`e ${rooms}-Zimmer-Wohnung`
+			}
+			messageString = messageString +", wo wir dies in Ruhe tun können."
 
 			if (form.calm.value == 'Yes'){
 				messageString = messageString + " Ihres Stadtviertel scheint die dafür notwendige ruhige Umgebung zu bieten."
@@ -141,10 +165,29 @@
 			`PhD program lasting at least 5 years, and would likely prefer `+
 			`to stay afterwards as well. Hence your advertisement`
 
+			// > Process multiflat
+			var wohnung = ""
+			if (form.multiflat.value == 'One flat') {
+				wohnung = "apartment"
+			} else {
+				wohnung = "apartments"
+			}
+			var rooms = form.rooms.value
+			if (form.multiflat.value == "Multiple flats") {
+				if (document.getElementById("min-rooms").value != "" && document.getElementById("max-rooms").value != ""){
+					if (document.getElementById("min-rooms").value == document.getElementById("max-rooms").value) {
+						rooms = `${document.getElementById("min-rooms").value}`
+					} else {
+						rooms = `${document.getElementById("min-rooms").value}- to ${document.getElementById("max-rooms").value}`
+					}
+				}
+			}
+
+			// Add introduction
 			if (form.reference.value == 'Address'){
-				messageString = messageString + ` for the apartment in ${form.address.value}`
+				messageString = messageString + ` for the ${wohnung} in ${form.address.value}`
 			} else if (form.reference.value == 'Number of rooms') {
-				messageString = messageString + ` for the ${form.rooms.value}-room apartment`
+				messageString = messageString + ` for the ${rooms}-room ${wohnung}`
 			} else if (form.reference.value == 'Title'){
 				messageString = messageString + ` titled "${form.title.value}"`
 			}
@@ -162,8 +205,13 @@
 			messageString = messageString +"\n\nOur essentially unconditional "+
 			"contracts provide a stable source of income. We are non-smokers, "+
 			"pet free, calm, and introverted. Moreover, all three of us specialize "+
-			"in mathematics so we study a lot, and we consequently seek a home "+
-			"where we can do so in peace."
+			"in mathematics so we study a lot, and we consequently seek "
+			if (form.multiflat.value == "One flat"){
+				messageString = messageString +"a home"
+			} else {
+				messageString = messageString +`a ${rooms}-room apartment`
+			}
+			messageString = messageString +" where we can do so in peace."
 
 			if (form.calm.value == 'Yes'){
 				messageString = messageString + " Your neighborhood seems to provide the calm environment necessary for that."
@@ -226,6 +274,22 @@
 			item.addClass('selected');
 			item.siblings().removeClass('selected');
 			$(`#${item.parent().attr("data-storage")}`).val(item.text());
+			// Change interactivity of elements
+			if (item.parent().attr("data-storage") == 'multiflat') {
+				changeMultiflat(item.text())
+			}
+		}
+
+		function changeMultiflat(to_value) {
+			if (to_value == "One flat"){
+				document.getElementById("room-bounds").classList.add("disabled")
+				document.getElementById("min-rooms").disabled = true
+				document.getElementById("max-rooms").disabled = true
+			} else {
+				document.getElementById("room-bounds").classList.remove("disabled")
+				document.getElementById("min-rooms").disabled = false
+				document.getElementById("max-rooms").disabled = false
+			}
 		}
 
 		function OnLoad(e) {
@@ -345,11 +409,20 @@
 			border-color: #ccc;
 			font-size: 16px;
 		}
+		div.textboxes {
+			display: flex;
+			flex-direction: row;
+		}
 		input[type="text"] {
-			width: 100%;
+			display: flex;
+			flex-grow: 1;
+			margin: 0px 2px;
 			border-width: 2px;
 			border-style: solid;
 			border-color: #ccc;
+		}
+		input[type=text]:disabled {
+			background-color: #ccc
 		}
 		input[type=checkbox]+label {
 			display: flex;
@@ -376,13 +449,18 @@
 			position: absolute;
 			visibility: hidden;
 			opacity: 0;
-		}	
+		}
+		div.disabled {
+			color: #ccc;
+		}
 	</style>
 </head>
 <body>
 	<form name="data" action="" method="GET">
 		<b>Recipient:</b><br>
-		<input type="text" id="recipient" value="Damen und Herren"><br>
+		<div class="textboxes">
+			<input type="text" id="recipient" value="Damen und Herren">
+		</div>
 		<input id="salutation" type="hidden" name="salutation">
 		<ul class="select" data-storage="salutation">
 			<li id="sal-male">Add Herr/Mr.</li>
@@ -390,13 +468,41 @@
 			<li class="selected">[Skip]</li>
 		</ul>
 		<b>Title:</b><br>
-		<input type="text" id="title" value="[MISSING]"><br>
+		<div class="textboxes">
+			<input type="text" id="title" value="[MISSING]">
+		</div>
 		<b>Website:</b><br>
-		<input type="text" id="website" value="[MISSING]"><br>
+		<div class="textboxes">
+			<input type="text" id="website" value="[MISSING]">
+		</div>
 		<b>Address:</b><br>
-		<input type="text" id="address" value="[MISSING]"><br>
+		<div class="textboxes">
+			<input type="text" id="address" value="[MISSING]"><br>
+		</div>
 		<b>Number of rooms:</b><br>
-		<input type="text" id="rooms" value=""><br><br>
+		<div class="textboxes">
+			<input type="text" id="rooms" value=""><br><br>
+		</div><br>
+
+		<b>Is ad for multiple flats?</b><br>
+		<input id="multiflat" type="hidden" name="multiflat">
+		<ul class="select" data-storage="multiflat">
+			<li class="selected">One flat</li>
+			<li>Multiple flats</li>
+		</ul>
+		<div id="room-bounds" class="disabled">
+			<b>Available room counts:</b>
+			<em>
+				Fill both even if equal, OR neither and the "No. rooms" textbox above! 
+				If info unavailable, just write "3" in the textbox above!
+				Only write numbers below which we would rent!
+			</em>
+			<div class="textboxes">
+				<input type="text" id="min-rooms" value="" placeholder="Minimum (e.g. 3)" disabled>
+				<input type="text" id="max-rooms" value="" placeholder="Maximum (e.g. 4)" disabled>
+			</div>
+		</div><br>
+
 		<b>Reference:</b><br>
 		<input id="reference" type="hidden" name="reference">
 		<ul class="select" data-storage="reference">
