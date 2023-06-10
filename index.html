@@ -52,13 +52,27 @@
 				wohnung = "Wohnungen"
 			}
 			var rooms = form.rooms.value
+			var desired_rooms = ""
 			if (form.multiflat.value == "Multiple flats") {
+				var smaller = null
+				var larger = null
 				if (document.getElementById("min-rooms").value != "" && document.getElementById("max-rooms").value != ""){
 					if (document.getElementById("min-rooms").value == document.getElementById("max-rooms").value) {
 						rooms = `${document.getElementById("min-rooms").value}`
 					} else {
 						rooms = `${document.getElementById("min-rooms").value}- bis ${document.getElementById("max-rooms").value}`
 					}
+					smaller = Math.max(document.getElementById("min-rooms").value, 3)
+					larger = Math.max(smaller, Math.min(document.getElementById("max-rooms").value, 4))
+				} else {
+					smaller = Math.max(form.rooms.value, 3)
+					larger = Math.max(smaller, Math.min(form.rooms.value, 4))
+				}
+				// Calculate desired_rooms:
+				if (smaller == larger) {
+					desired_rooms = `${smaller}`
+				} else {
+					desired_rooms = `${smaller}- bis ${larger}`
 				}
 			}
 
@@ -88,7 +102,7 @@
 			if (form.multiflat.value == "One flat"){
 				messageString = messageString +" Zuhause"
 			} else {
-				messageString = messageString +`e ${rooms}-Zimmer-Wohnung`
+				messageString = messageString +`e ${desired_rooms}-Zimmer-Wohnung`
 			}
 			messageString = messageString +", wo wir dies in Ruhe tun können."
 
@@ -173,13 +187,27 @@
 				wohnung = "apartments"
 			}
 			var rooms = form.rooms.value
+			var desired_rooms = ""
 			if (form.multiflat.value == "Multiple flats") {
+				var smaller = null
+				var larger = null
 				if (document.getElementById("min-rooms").value != "" && document.getElementById("max-rooms").value != ""){
 					if (document.getElementById("min-rooms").value == document.getElementById("max-rooms").value) {
 						rooms = `${document.getElementById("min-rooms").value}`
 					} else {
 						rooms = `${document.getElementById("min-rooms").value}- to ${document.getElementById("max-rooms").value}`
 					}
+					smaller = Math.max(document.getElementById("min-rooms").value, 3)
+					larger = Math.max(smaller, Math.min(document.getElementById("max-rooms").value, 4))
+				} else {
+					smaller = Math.max(form.rooms.value, 3)
+					larger = Math.max(smaller, Math.min(form.rooms.value, 4))
+				}
+				// Calculate desired_rooms:
+				if (smaller == larger) {
+					desired_rooms = `${smaller}`
+				} else {
+					desired_rooms = `${smaller}- to ${larger}`
 				}
 			}
 
@@ -209,7 +237,7 @@
 			if (form.multiflat.value == "One flat"){
 				messageString = messageString +"a home"
 			} else {
-				messageString = messageString +`a ${rooms}-room apartment`
+				messageString = messageString +`a ${desired_rooms}-room apartment`
 			}
 			messageString = messageString +" where we can do so in peace."
 
@@ -495,7 +523,6 @@
 			<em>
 				Fill both even if equal, OR neither and the "No. rooms" textbox above! 
 				If info unavailable, just write "3" in the textbox above!
-				Only write numbers below which we would rent!
 			</em>
 			<div class="textboxes">
 				<input type="text" id="min-rooms" value="" placeholder="Minimum (e.g. 3)" disabled>
