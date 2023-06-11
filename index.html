@@ -30,15 +30,15 @@
 
 		function germanText(form){
 			//Calculate salutation
-			salutation=""
+			salutation=" "
 			if(form.salutation.value=="Add Herr/Mr."){
-				salutation="Herr "
+				salutation="r Herr "
 			}
 			if(form.salutation.value=="Add Frau/Ms."){
-				salutation="Frau "
+				salutation=" Frau "
 			}
 			// Produce message:
-			var messageString = `Sehr geehrte ${salutation}${form.recipient.value},\n\n`+
+			var messageString = `Sehr geehrte${salutation}${form.recipient.value},\n\n`+
 			`Wir suchen ein Zuhause als Stipendiaten in einem gemeinsamen `+
 			`Promotionsprogramm (der dauert mindestens 5 Jahre) und würden `+
 			`wahrscheinlich auch danach gerne bleiben. Aus diesem Grund hat `+
