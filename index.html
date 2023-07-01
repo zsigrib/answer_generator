@@ -28,6 +28,72 @@
 			copyToClipboard(editorElem.innerText)
 		}
 
+		function germanCannedText(){
+			console.log("here")
+			messageString = `Hallo,`+
+			`\n\n`+
+			`Wir suchen ein Zuhause als Stipendiaten in einem gemeinsamen `+
+			`Promotionsprogramm (der dauert mindestens 5 Jahre) und würden `+
+			`wahrscheinlich auch danach gerne bleiben. Aus diesem Grund hat `+
+			`uns Ihre Anzeige aufmerksam gemacht.`+
+			`\n\n`+
+			`Unsere im Wesentlichen bedingungslosen Verträge bieten ein `+
+			`sicheres Einkommen. Wir sind Nichtraucher, haustierfrei, ruhig `+
+			`und introvertiert. Darüber hinaus spezialisieren wir uns alle `+
+			`drei auf Mathematik, so dass wir viel studieren, und deshalb `+
+			`suchen wir ein Zuhause, wo wir dies in Ruhe tun können. Wir `+
+			`hoffen, dass Ihre Wohnung die dafür notwendige ruhige Umgebung `+
+			`bietet. Besonders attraktiv finden wir die Nähe zu den drei `+
+			`großen Universitäten, die wir besuchen, und die Einbauküche.`+
+			`\n\n`+
+			`Die jahrzehntelange Freundschaft zwischen uns bedeutet, dass `+
+			`wir uns gegenseitig vertrauen, einen konventionell hohen `+
+			`Standard an Ordnung und Sauberkeit aufrechtzuerhalten, den wir `+
+			`uns nach unseren Erfahrungen mit Wohngemeinschaften mit anderen `+
+			`sehr wünschen.`+
+			`\n\n`+
+			`Schließlich sind wir nach den letzten Jahren in Berlin überzeugt, `+
+			`dass wir alles auf Deutsch regeln können. Künftig soll jedoch die `+
+			`Kommunikation auf Englisch bevorzugt werden.`+
+			`\n\n`+
+			`Mit freundlichen Grüßen,\n`+
+			`Adam Schweitzer`
+			// Add message to editor:
+			document.getElementById("editor").innerText = messageString;
+			toClipboard()
+		}
+
+		function englishCannedText(){
+			messageString = `Hi,`+
+			`\n\n`+
+			`We are looking for a home as scholarship holders in a joint PhD `+
+			`program lasting at least 5 years, and would likely prefer to stay `+
+			`afterwards as well. Hence your advertisement has caught our attention.`+
+			`\n\n`+
+			`Our essentially unconditional contracts provide a stable source of `+
+			`income. We are non-smokers, pet free, calm, and introverted. Moreover, `+
+			`all three of us specialize in mathematics so we study a lot, and we `+
+			`consequently seek a home where we can do so in peace. We hope your `+
+			`apartment can provide the calm environment necessary for that. We `+
+			`especially find the proximity of the three major universities that `+
+			`we attend, and the fitted kitchen attractive.`+
+			`\n\n`+
+			`The decade old friendship between us means that we trust each other to `+
+			`maintain a conventionally high standard of order and cleanliness, which `+
+			`we highly desire after our experiences with shared accommodations with `+
+			`others.`+
+			`\n\n`+
+			`Finally, after our past years in Berlin we are convinced that we can `+
+			`get everything sorted out in German. However, in the future communication `+
+			`in English would be preferred.`+
+			`\n\n`+
+			`Yours sincerely,\n`+
+			`Adam Schweitzer`
+			// Add message to editor:
+			document.getElementById("editor").innerText = messageString;
+			toClipboard()
+		}
+
 		function germanText(form){
 			//Calculate salutation
 			salutation=" "
@@ -485,6 +551,10 @@
 </head>
 <body>
 	<form name="data" action="" method="GET">
+		<div class="btns">
+			<input type="button" name="germanCanned" value="Canned German" onClick="germanCannedText()">
+			<input type="button" name="englishCanned" value="Canned English" onClick="englishCannedText()">
+		</div>
 		<b>Recipient:</b><br>
 		<div class="textboxes">
 			<input type="text" id="recipient" value="Damen und Herren">
