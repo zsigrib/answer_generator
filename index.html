@@ -28,365 +28,187 @@
 			copyToClipboard(editorElem.innerText)
 		}
 
-		function germanCannedText(){
-			console.log("here")
-			messageString = `Hallo,`+
-			`\n\n`+
-			`Wir suchen ein Zuhause als Stipendiaten in einem gemeinsamen `+
-			`Promotionsprogramm (der dauert mindestens 5 Jahre) und würden `+
-			`wahrscheinlich auch danach gerne bleiben. Aus diesem Grund hat `+
-			`uns Ihre Anzeige aufmerksam gemacht.`+
-			`\n\n`+
-			`Unsere im Wesentlichen bedingungslosen Verträge bieten ein `+
-			`sicheres Einkommen. Wir sind Nichtraucher, haustierfrei, ruhig `+
-			`und introvertiert. Darüber hinaus spezialisieren wir uns alle `+
-			`drei auf Mathematik, so dass wir viel studieren, und deshalb `+
-			`suchen wir ein Zuhause, wo wir dies in Ruhe tun können. Wir `+
-			`hoffen, dass Ihre Wohnung die dafür notwendige ruhige Umgebung `+
-			`bietet. Besonders attraktiv finden wir die Nähe zu den drei `+
-			`großen Universitäten, die wir besuchen, und die Einbauküche.`+
-			`\n\n`+
-			`Die jahrzehntelange Freundschaft zwischen uns bedeutet, dass `+
-			`wir uns gegenseitig vertrauen, einen konventionell hohen `+
-			`Standard an Ordnung und Sauberkeit aufrechtzuerhalten, den wir `+
-			`uns nach unseren Erfahrungen mit Wohngemeinschaften mit anderen `+
-			`sehr wünschen.`+
-			`\n\n`+
-			`Schließlich sind wir nach den letzten Jahren in Berlin überzeugt, `+
-			`dass wir alles auf Deutsch regeln können. Künftig soll jedoch die `+
-			`Kommunikation auf Englisch bevorzugt werden.`+
-			`\n\n`+
-			`Mit freundlichen Grüßen,\n`+
-			`Adam Schweitzer`
-			// Add message to editor:
-			document.getElementById("editor").innerText = messageString;
-			toClipboard()
-			window.close()
+
+
+		function greeting(){
+			time=new Date().toLocaleTimeString()
+			if(5<Number(time.substring(0,2)) && time.endsWith("AM")){
+				return "Morning"
+			}
+			if(7>Number(time.substring(0,2)) && time.endsWith("PM")){
+				return "Afternoon"
+			}else return "Evening"
 		}
+		
 
-		function englishCannedText(){
-			messageString = `Hi,`+
-			`\n\n`+
-			`We are looking for a home as scholarship holders in a joint PhD `+
-			`program lasting at least 5 years, and would likely prefer to stay `+
-			`afterwards as well. Hence your advertisement has caught our attention.`+
-			`\n\n`+
-			`Our essentially unconditional contracts provide a stable source of `+
-			`income. We are non-smokers, pet free, calm, and introverted. Moreover, `+
-			`all three of us specialize in mathematics so we study a lot, and we `+
-			`consequently seek a home where we can do so in peace. We hope your `+
-			`apartment can provide the calm environment necessary for that. We `+
-			`especially find the proximity of the three major universities that `+
-			`we attend, and the fitted kitchen attractive.`+
-			`\n\n`+
-			`The decade old friendship between us means that we trust each other to `+
-			`maintain a conventionally high standard of order and cleanliness, which `+
-			`we highly desire after our experiences with shared accommodations with `+
-			`others.`+
-			`\n\n`+
-			`Finally, after our past years in Berlin we are convinced that we can `+
-			`get everything sorted out in German. However, in the future communication `+
-			`in English would be preferred.`+
-			`\n\n`+
-			`Yours sincerely,\n`+
-			`Adam Schweitzer`
-			// Add message to editor:
-			document.getElementById("editor").innerText = messageString;
-			toClipboard()
-			window.close()
-		}
-
-		function germanText(form){
-			//Calculate salutation
-			salutation=" "
-			if(form.salutation.value=="Add Herr/Mr."){
-				salutation="r Herr "
-			}
-			if(form.salutation.value=="Add Frau/Ms."){
-				salutation=" Frau "
-			}
-			// Produce message:
-			var messageString = `Sehr geehrte${salutation}${form.recipient.value},\n\n`+
-			`Wir suchen ein Zuhause als Stipendiaten in einem gemeinsamen `+
-			`Promotionsprogramm (der dauert mindestens 5 Jahre) und würden `+
-			`wahrscheinlich auch danach gerne bleiben. Aus diesem Grund hat `+
-			`uns Ihre Anzeige`
-
-			// > Process multiflat
-			var wohnung = ""
-			if (form.multiflat.value == 'One flat') {
-				wohnung = "Wohnung"
-			} else {
-				wohnung = "Wohnungen"
-			}
-			var rooms = form.rooms.value
-			var desired_rooms = ""
-			if (form.multiflat.value == "Multiple flats") {
-				var smaller = null
-				var larger = null
-				if (document.getElementById("min-rooms").value != "" && document.getElementById("max-rooms").value != ""){
-					if (document.getElementById("min-rooms").value == document.getElementById("max-rooms").value) {
-						rooms = `${document.getElementById("min-rooms").value}`
-					} else {
-						rooms = `${document.getElementById("min-rooms").value}- bis ${document.getElementById("max-rooms").value}`
-					}
-					smaller = Math.max(document.getElementById("min-rooms").value, 3)
-					larger = Math.max(smaller, Math.min(document.getElementById("max-rooms").value, 4))
-				} else {
-					smaller = Math.max(form.rooms.value, 3)
-					larger = Math.max(smaller, Math.min(form.rooms.value, 4))
-				}
-				// Calculate desired_rooms:
-				if (smaller == larger) {
-					desired_rooms = `${smaller}`
-				} else {
-					desired_rooms = `${smaller}- bis ${larger}`
-				}
-			}
-
+		function introduction(form){
 			// Add introduction
+			messageString=``
 			if (form.reference.value == 'Address'){
-				messageString = messageString + ` für die ${wohnung} in ${form.address.value}`
+				messageString = messageString + ` ${rooms.value}-room apartment at ${form.address.value}`
 			} else if (form.reference.value == 'Number of rooms') {
-				messageString = messageString + ` für die ${rooms}-Zimmer-${wohnung}`
+				messageString = messageString + ` ${rooms.value}-room apartment`
 			} else if (form.reference.value == 'Title'){
-				messageString = messageString + ` mit dem Titel "${form.title.value}"`
+				messageString = messageString + ` offer: "${form.title.value}" from ${form.website.value}`
+			}else messageString = messageString + ` offer from ${form.website.value}`
+			return messageString
+		}
+
+
+		function proximity(form) {
+			messageString=""
+			if (form.closest.value == "All" || form.closest.value == "Boxy"){
+				messageString = messageString + " in both the Freie Universität and Humboldt Universität"
+			} else if (form.closest.value == "FU"){
+				messageString = messageString + " in Freie Universität"
+			} else if (form.closest.value == "HU"){
+				messageString = messageString + " in Humboldt Universität"
 			}
+			return messageString
+		}
 
-			if (form.refweb.value == 'Yes'){
-				messageString = messageString + ` auf ${form.website.value}`
+		function germanSal(sal){
+			if(sal=="Mr.")return "Herr"
+			if(sal=="Ms.")return "Frau"
+			else return sal
+		}
+
+		function germanGreeting(){
+			time=new Date().toLocaleTimeString()
+			if(5<Number(time.substring(0,2)) && time.endsWith("AM")){
+				return "Morgen"
 			}
+			if(7>Number(time.substring(0,2)) && time.endsWith("PM")){
+				return "Tag"
+			}else return "Abend"
+		}
 
-			messageString = messageString + " aufmerksam gemacht."
+		function germanIntrodution(form){
+// Add introduction 
+//Ich bin sehr interessiert an Ihrem Angebot: 
+//Ich bin sehr interessiert an Ihrer (-)-Zimmer-Wohnung in (-). 
+			messageString=``
+			if (form.reference.value == 'Address'){
+				messageString = messageString + ` Ihrer ${rooms.value}-Zimmer-Wohnung in ${form.address.value}`
+			} else if (form.reference.value == 'Number of rooms') {
+				messageString = messageString + ` Ihrer ${rooms.value}-Zimmer-Wohnung`
+			} else if (form.reference.value == 'Title'){
+				messageString = messageString + ` Ihrem Angebot: "${form.title.value} auf ${form.website.value}"`
+			} else messageString = messageString + "Ihrem Angebot auf ${form.website.value}"
 
-			if (form.blueprint.value == 'Yes'){
-				messageString = messageString + " Wenn möglich, würden wir uns für den Grundriss interessieren."
+			return messageString
+
+		}
+
+
+		function germanProximity(form) {
+			messageString=""
+			if (form.closest.value == "All" || form.closest.value == "Boxy"){
+				messageString = messageString + "Da ich sowohl an der Freien Universität als auch an der Humboldt Universität verschiedene Kurse belege, passt auch die Lage Ihrer Wohnung perfekt zu mir."
+			} else if (form.closest.value == "FU"){
+				messageString = messageString + "Da ich verschiedene Kurse an der Freien Universität belege, kommt mir die Lage Ihrer Wohnung auch sehr entgegen."
+			} else if (form.closest.value == "HU"){
+				messageString = messageString + "Da ich verschiedene Kurse an der Humboldt Universität belege, kommt mir die Lage Ihrer Wohnung auch sehr entgegen."
 			}
+			return messageString
+		}
 
-			messageString = messageString +"\n\nUnsere im Wesentlichen bedingungslosen "+
-			"Verträge bieten ein sicheres Einkommen. Wir sind Nichtraucher, haustierfrei, "+
-			"ruhig und introvertiert. Darüber hinaus spezialisieren wir uns alle drei auf "+
-			"Mathematik, so dass wir viel studieren, und deshalb suchen wir ein"
-			if (form.multiflat.value == "One flat"){
-				messageString = messageString +" Zuhause"
-			} else {
-				messageString = messageString +`e ${desired_rooms}-Zimmer-Wohnung mit EBK `
-			}
-			messageString = messageString +", wo wir dies in Ruhe tun können."
 
-			if (form.calm.value == 'Yes'){
-				messageString = messageString + " Ihres Stadtviertel scheint die dafür notwendige ruhige Umgebung zu bieten."
-			} else {
-				messageString = messageString + " Wir hoffen, dass Ihre Wohnung die dafür notwendige ruhige Umgebung bietet."
-			}
+		function Text(form,noWbs){
 
-			messageString = messageString + " Besonders attraktiv finden wir "
+
+			messageString=`----------------Deutsch unter---------------------
+Good ${greeting()} ${form.salutation.value} ${form.recipient.value},
+
+I am Adam Schweitzer, a university student studying theoretical mathematics in Berlin in a joint graduate scholarship program.
+I am very interested in your ${introduction(form)}. I am 23 years old, I don't smoke and don't have any pets. I am looking for a quiet apartment, where I can focus on my studies. I am very happy to see the equipment of the kitchen, as I love to cook! As I am taking various classes${proximity(form)} your appartement's position also suits me perfectly.
+
+I have a stable income through my scholarship of 1000 euros${noWbs ? ` (increasing to 1600 as I start my PhD), and additionally, my family is willing to sign a guarantee (Bürgschaft) for my payment as well.` : `. I also have a WBS certificate ready.`} I can present you my excellent SCHUFA, my Mietschuldenfreiheitsbescheinigung and my scholarship contract. If you need any other documents, please let me know.
+
+In my previous tenancies I have learnt to handle basic repairs by myself, and I would continue to do so here, if necessary. Sadly my German is still very basic, but I can communicate through writing in German.
+If you need any more information, please don't hesitate to write to me at adamsch61@gmail.com, or through ${form.website.value}.
+
+I wish you a nice day and I would be pleased if I had a chance to be invited to a viewing. 
+Thank you for your time, ${form.salutation.value} ${form.recipient.value}.
+
+Kind regards,
+Adam Schweitzer
+-----------------------------------------------------
+Guten ${germanGreeting()} ${germanSal(form.salutation.value)} ${form.recipient.value},
+
+Ich bin Adam Schweitzer, Student der Theoretischen Mathematik in Berlin im Rahmen eines gemeinsamen Graduiertenstipendiums.
+Ich bin sehr interessiert an ${germanIntrodution(form)}. Ich bin 23 Jahre alt, rauche nicht und habe keine Haustiere. Ich suche eine ruhige Wohnung, in der ich mich auf mein Studium konzentrieren kann. Ich bin sehr glücklich, die Ausstattung der Küche zu sehen, da ich gerne koche! ${germanProximity(form)}
+
+Ich habe ein stabiles Einkommen durch mein Stipendium von 1000 Euro${noWbs ? ` (das sich auf 1600 Euro erhöht, wenn ich meine Promotion beginne), und zusätzlich ist meine Familie bereit, eine Bürgschaft für meine Zahlung zu unterschreiben.` : `. Ich habe auch ein WBS-Zertifikat parat.`} Ich kann Ihnen meine ausgezeichnete SCHUFA, meine Mietschuldenfreiheitsbescheinigung und meinen Stipendienvertrag vorlegen. Sollten Sie weitere Unterlagen benötigen, lassen Sie es mich bitte wissen.
+
+In meinen vorherigen Mietverhältnissen habe ich gelernt, grundlegende Reparaturen selbst zu erledigen, und würde dies auch hier tun, falls nötig. Leider ist mein Deutsch noch sehr einfach, aber ich kann mich schriftlich auf Deutsch verständigen.
+Wenn Sie weitere Informationen benötigen, zögern Sie bitte nicht, mir an adamsch61@gmail.com zu schreiben, oder über ${form.website.value}.
+
+Ich wünsche Ihnen einen schönen Tag und würde mich freuen, wenn ich zu einer Besichtigung eingeladen werden könnte. 
+Vielen Dank für Ihre Zeit, ${germanSal(form.salutation.value)} ${form.recipient.value}.
+
+Mit freundlichen Grüßen,
+Adam Schweitzer
+`
 			
-			if (form.closest.value == "All"){
-				messageString = messageString + "die Nähe zu den drei großen Universitäten, die wir besuchen"
-			} else if (form.closest.value == "FU"){
-				messageString = messageString + "die Nähe zur Freie Universität"
-			} else if (form.closest.value == "TU"){
-				messageString = messageString + "die Nähe zur Technische Universität"
-			} else if (form.closest.value == "HU"){
-				messageString = messageString + "die Nähe zur Humboldt Universität"
-			}
-
-			var goodies = [];
-			if (form.balcony.checked){
-				goodies.push("den Balkon")
-			}
-			if (form.balconies.checked){
-				goodies.push("die Balkone")
-			}
-			if (form.washingmachine.checked){
-				goodies.push("die Waschmaschine")
-			}
-			if (form.ebk.checked){
-				goodies.push("die Einbauküche")
-			}
-			for (let i = 0; i < goodies.length; i++) {
-				messageString = messageString + ", "
-				if (i == goodies.length - 1){
-					messageString = messageString + "und "
-				}
-				messageString = messageString + goodies[i]
-			}
-
-			messageString = messageString + ".\n\n"+
-			"Die jahrzehntelange Freundschaft "+
-			"zwischen uns bedeutet, dass wir uns gegenseitig vertrauen, einen "+
-			"konventionell hohen Standard an Ordnung und Sauberkeit aufrechtzuerhalten, "+
-			"den wir uns nach unseren Erfahrungen mit Wohngemeinschaften mit anderen "+
-			"sehr wünschen."+
-			"\n\n"+
-			"Schließlich sind wir nach den letzten Jahren in Berlin "+
-			"überzeugt, dass wir alles auf Deutsch regeln können. Künftig soll jedoch "+
-			"die Kommunikation auf Englisch bevorzugt werden."+
-			"\n\n"+
-			"Mit freundlichen Grüßen,\n"+
-			"Adam Schweitzer"
-
 			// Add message to editor:
 			document.getElementById("editor").innerText = messageString;
 			toClipboard()
 		}
 
-		function englishText(form){
-			//Calculate salutation
-			salutation=""
-			if(form.salutation.value=="Add Herr/Mr."){
-				salutation="Mr. "
-			}
-			if(form.salutation.value=="Add Frau/Ms."){
-				salutation="Ms. "
-			}
-			// Produce message:
-			var messageString = `Dear ${salutation}${form.recipient.value},\n\n`+
-			`We are looking for a home as scholarship holders in a joint `+
-			`PhD program lasting at least 5 years, and would likely prefer `+
-			`to stay afterwards as well. Hence your advertisement`
 
-			// > Process multiflat
-			var wohnung = ""
-			if (form.multiflat.value == 'One flat') {
-				wohnung = "apartment"
-			} else {
-				wohnung = "apartments"
-			}
-			var rooms = form.rooms.value
-			var desired_rooms = ""
-			if (form.multiflat.value == "Multiple flats") {
-				var smaller = null
-				var larger = null
-				if (document.getElementById("min-rooms").value != "" && document.getElementById("max-rooms").value != ""){
-					if (document.getElementById("min-rooms").value == document.getElementById("max-rooms").value) {
-						rooms = `${document.getElementById("min-rooms").value}`
-					} else {
-						rooms = `${document.getElementById("min-rooms").value}- to ${document.getElementById("max-rooms").value}`
-					}
-					smaller = Math.max(document.getElementById("min-rooms").value, 3)
-					larger = Math.max(smaller, Math.min(document.getElementById("max-rooms").value, 4))
-				} else {
-					smaller = Math.max(form.rooms.value, 3)
-					larger = Math.max(smaller, Math.min(form.rooms.value, 4))
-				}
-				// Calculate desired_rooms:
-				if (smaller == larger) {
-					desired_rooms = `${smaller}`
-				} else {
-					desired_rooms = `${smaller}- to ${larger}`
-				}
-			}
+		function cannedText(form,noWbs){
 
-			// Add introduction
-			if (form.reference.value == 'Address'){
-				messageString = messageString + ` for the ${wohnung} in ${form.address.value}`
-			} else if (form.reference.value == 'Number of rooms') {
-				messageString = messageString + ` for the ${rooms}-room ${wohnung}`
-			} else if (form.reference.value == 'Title'){
-				messageString = messageString + ` titled "${form.title.value}"`
-			}
 
-			if (form.refweb.value == 'Yes'){
-				messageString = messageString + ` on ${form.website.value}`
-			}
+			messageString=`----------------Deutsch unter---------------------
+Good ${greeting()},
 
-			messageString = messageString + " has caught our attention."
+I am Adam Schweitzer, a university student studying theoretical mathematics in Berlin in a joint graduate scholarship program.
+I am very interested in your ${introduction(form)}. I am 23 years old, I don't smoke and don't have any pets. I am looking for a quiet apartment, where I can focus on my studies. I am very happy to see the equipment of the kitchen, as I love to cook! As I am taking various classes${proximity(form)} your appartement's position also suits me perfectly.
 
-			if (form.blueprint.value == 'Yes'){
-				messageString = messageString + " If possible, we would be interested in seeing the floorplan of the apartment."
-			}
+I have a stable income through my scholarship of 1000 euros${noWbs ? ` (increasing to 1600 as I start my PhD), and additionally, my family is willing to sign a guarantee (Bürgschaft) for my payment as well.` : `. I also have a WBS certificate ready.`} I can present you my excellent SCHUFA, my Mietschuldenfreiheitsbescheinigung and my scholarship contract. If you need any other documents, please let me know.
 
-			messageString = messageString +"\n\nOur essentially unconditional "+
-			"contracts provide a stable source of income. We are non-smokers, "+
-			"pet free, calm, and introverted. Moreover, all three of us specialize "+
-			"in mathematics so we study a lot, and we consequently seek "
-			if (form.multiflat.value == "One flat"){
-				messageString = messageString +"a home"
-			} else {
-				messageString = messageString +`a ${desired_rooms}-room apartment with a fitted kitchen`
-			}
-			messageString = messageString +" where we can do so in peace."
+In my previous tenancies I have learnt to handle basic repairs by myself, and I would continue to do so here, if necessary. Sadly my German is still very basic, but I can communicate through writing in German.
+If you need any more information, please don't hesitate to write to me at adamsch61@gmail.com, or through ${form.website.value}.
 
-			if (form.calm.value == 'Yes'){
-				messageString = messageString + " Your neighborhood seems to provide the calm environment necessary for that."
-			} else {
-				messageString = messageString + " We hope your apartment can provide the calm environment necessary for that."
-			}
+I wish you a nice day and I would be pleased if I had a chance to be invited to a viewing. 
+Thank you for your time.
 
-			messageString = messageString + " We especially find "
+Kind regards,
+Adam Schweitzer
+-----------------------------------------------------
+Guten ${germanGreeting()},
 
-			if (form.closest.value == "All"){
-				messageString = messageString + "the proximity of the three major universities that we attend"
-			} else if (form.closest.value == "FU"){
-				messageString = messageString + "the proximity of Freie Universität"
-			} else if (form.closest.value == "TU"){
-				messageString = messageString + "the proximity of Technische Universität"
-			} else if (form.closest.value == "HU"){
-				messageString = messageString + "the proximity of Humboldt Universität"
-			}
+Ich bin Adam Schweitzer, Student der Theoretischen Mathematik in Berlin im Rahmen eines gemeinsamen Graduiertenstipendiums.
+Ich bin sehr interessiert an ${germanIntrodution(form)}. Ich bin 23 Jahre alt, rauche nicht und habe keine Haustiere. Ich suche eine ruhige Wohnung, in der ich mich auf mein Studium konzentrieren kann. Ich bin sehr glücklich, die Ausstattung der Küche zu sehen, da ich gerne koche! ${germanProximity(form)}
 
-			var goodies = [];
-			if (form.balcony.checked){
-				goodies.push("the balcony")
-			}
-			if (form.balconies.checked){
-				goodies.push("the balconies")
-			}
-			if (form.washingmachine.checked){
-				goodies.push("the washing machine")
-			}
-			if (form.ebk.checked){
-				goodies.push("the fitted kitchen")
-			}
-			for (let i = 0; i < goodies.length; i++) {
-				messageString = messageString + ", "
-				if (i == goodies.length - 1){
-					messageString = messageString + "and "
-				}
-				messageString = messageString + goodies[i]
-			}
+Ich habe ein stabiles Einkommen durch mein Stipendium von 1000 Euro${noWbs ? ` (das sich auf 1600 Euro erhöht, wenn ich meine Promotion beginne), und zusätzlich ist meine Familie bereit, eine Bürgschaft für meine Zahlung zu unterschreiben.` : `. Ich habe auch ein WBS-Zertifikat parat.`} Ich kann Ihnen meine ausgezeichnete SCHUFA, meine Mietschuldenfreiheitsbescheinigung und meinen Stipendienvertrag vorlegen. Sollten Sie weitere Unterlagen benötigen, lassen Sie es mich bitte wissen.
 
-			messageString = messageString + " attractive.\n\n"+
-			"The decade old friendship between us means that we trust "+
-			"each other to maintain a conventionally high standard of "+
-			"order and cleanliness, which we highly desire after our "+
-			"experiences with shared accommodations with others."+
-			"\n\n"+
-			"Finally, after our past years in Berlin we are convinced "+
-			"that we can get everything sorted out in German. However, "+
-			"in the future communication in English would be preferred."+
-			"\n\n"+
-			"Yours sincerely,\n"+
-			"Adam Schweitzer"
+In meinen vorherigen Mietverhältnissen habe ich gelernt, grundlegende Reparaturen selbst zu erledigen, und würde dies auch hier tun, falls nötig. Leider ist mein Deutsch noch sehr einfach, aber ich kann mich schriftlich auf Deutsch verständigen.
+Wenn Sie weitere Informationen benötigen, zögern Sie bitte nicht, mir an adamsch61@gmail.com zu schreiben, oder über ${form.website.value}.
 
+Ich wünsche Ihnen einen schönen Tag und würde mich freuen, wenn ich zu einer Besichtigung eingeladen werden könnte. 
+Vielen Dank für Ihre Zeit.
+
+Mit freundlichen Grüßen,
+Adam Schweitzer
+`
+			
 			// Add message to editor:
 			document.getElementById("editor").innerText = messageString;
 			toClipboard()
 		}
+
+		
 
 		function selectItem(item) {
 			item.addClass('selected');
 			item.siblings().removeClass('selected');
 			$(`#${item.parent().attr("data-storage")}`).val(item.text());
-			// Change interactivity of elements
-			if (item.parent().attr("data-storage") == 'multiflat') {
-				changeMultiflat(item.text())
-			}
+			
 		}
 
-		function changeMultiflat(to_value) {
-			if (to_value == "One flat"){
-				document.getElementById("room-bounds").classList.add("disabled")
-				document.getElementById("min-rooms").disabled = true
-				document.getElementById("max-rooms").disabled = true
-			} else {
-				document.getElementById("room-bounds").classList.remove("disabled")
-				document.getElementById("min-rooms").disabled = false
-				document.getElementById("max-rooms").disabled = false
-			}
-		}
+		
 
 		function OnLoad(e) {
 			// Make list items selectable
@@ -396,18 +218,9 @@
 			});
 			// Calculate textbox default values
 			document.getElementById("title").value = urlParams.get('Title');
+			selectItem($(document.getElementById("opt-title")))
+				
 			document.getElementById("website").value = urlParams.get('Website').substring(5);
-			if (urlParams.get("Street") != "None") {
-				document.getElementById("address").value = urlParams.get("Street")
-				selectItem($(document.getElementById("opt-address")))
-				if (urlParams.get("House number") != "None") {
-					document.getElementById("address").value += " " + urlParams.get("House number")
-				}
-			} else if (urlParams.get('Address') != "None") {
-				document.getElementById("address").value = urlParams.get('Address')
-			} else {
-				document.getElementById("address").value = ""
-			}
 
 			if(urlParams.get("Lastname")!="None"){
 				if(urlParams.get("Lastname")=="Privat" && urlParams.get("Firstname")!="None"){
@@ -431,14 +244,27 @@
 				document.getElementById("rooms").value = ""
 			} else if (rms.endsWith(".0")) {
 				document.getElementById("rooms").value = rms.substring(0, rms.length-2)
+				selectItem($(document.getElementById("opt-zimmer")))
 			} else {
 				document.getElementById("rooms").value = rms
+				selectItem($(document.getElementById("opt-zimmer")))
 			}
 			// Select default values
 			var tu = ((urlParams.get("TU distance") == "None") ? 2*60*60 : urlParams.get("TU distance"))
 			var hu = ((urlParams.get("HU distance") == "None") ? 2*60*60 : urlParams.get("HU distance"))
 			var fu = ((urlParams.get("FU distance") == "None") ? 2*60*60 : urlParams.get("FU distance"))
 			
+			if (urlParams.get("Street") != "None") {
+				document.getElementById("address").value = urlParams.get("Street")
+				selectItem($(document.getElementById("opt-address")))
+				if (urlParams.get("House number") != "None") {
+					document.getElementById("address").value += " " + urlParams.get("House number")
+				}
+			} else if (urlParams.get('Address') != "None") {
+				document.getElementById("address").value = urlParams.get('Address')
+			} else {
+				document.getElementById("address").value = ""
+			}
 			if (fu < 40*60 && hu >= 40*60 && tu >= 40*60) {
 				selectItem($(document.getElementById("opt-fu")))
 			} else if (fu >= 40*60 && hu < 40*60 && tu >= 40*60) {
@@ -554,18 +380,19 @@
 <body>
 	<form name="data" action="" method="GET">
 		<div class="btns">
-			<input type="button" name="germanCanned" value="Canned German" onClick="germanCannedText()">
-			<input type="button" name="englishCanned" value="Canned English" onClick="englishCannedText()">
+			<input type="button" name="noWBSCanned" value="noWBSCanned" onClick="cannedText(form,true)">
+			<input type="button" name="WBSCanned" value="WBSCanned" onClick="cannedText(form,false)">
 		</div>
+		
 		<b>Recipient:</b><br>
 		<div class="textboxes">
-			<input type="text" id="recipient" value="Damen und Herren">
+			<input type="text" id="recipient" value="Landlord">
 		</div>
 		<input id="salutation" type="hidden" name="salutation">
 		<ul class="select" data-storage="salutation">
-			<li id="sal-male">Add Herr/Mr.</li>
-			<li id="sal-female">Add Frau/Ms.</li>
-			<li class="selected">[Skip]</li>
+			<li id="sal-male">Mr.</li>
+			<li id="sal-female">Ms.</li>
+			<li class="selected"></li>
 		</ul>
 		<b>Title:</b><br>
 		<div class="textboxes">
@@ -584,23 +411,6 @@
 			<input type="text" id="rooms" value=""><br><br>
 		</div><br>
 
-		<b>Is ad for multiple flats?</b><br>
-		<input id="multiflat" type="hidden" name="multiflat">
-		<ul class="select" data-storage="multiflat">
-			<li class="selected">One flat</li>
-			<li>Multiple flats</li>
-		</ul>
-		<div id="room-bounds" class="disabled">
-			<b>Available room counts:</b>
-			<em>
-				Fill both even if equal, OR neither and the "No. rooms" textbox above! 
-				If info unavailable, just write "3" in the textbox above!
-			</em>
-			<div class="textboxes">
-				<input type="text" id="min-rooms" value="" placeholder="Minimum (e.g. 3)" disabled>
-				<input type="text" id="max-rooms" value="" placeholder="Maximum (e.g. 4)" disabled>
-			</div>
-		</div><br>
 
 		<b>Reference:</b><br>
 		<input id="reference" type="hidden" name="reference">
@@ -610,51 +420,27 @@
 			<li id="opt-title">Title</li>
 			<li class="selected">[Skip]</li>
 		</ul>
-		<b>Reference website?</b><br>
-		<input id="refweb" type="hidden" name="refweb">
-		<ul class="select" data-storage="refweb">
-			<li>Yes</li>
-			<li class="selected">No</li>
-		</ul>
-		<b>Ask for blueprint?</b><br>
+		<!--<b>Ask for blueprint?</b><br>
 		<input id="blueprint" type="hidden" name="blueprint">
 		<ul class="select" data-storage="blueprint">
 			<li>Yes</li>
 			<li class="selected">No</li>
-		</ul>
-		<b>Is neighborhood calm?</b><br>
-		<input id="calm" type="hidden" name="calm">
-		<ul class="select" data-storage="calm">
-			<li>Yes</li>
-			<li class="selected">No</li>
-		</ul>
+		</ul>-->
+
 		<b>Close to?</b><br>
 		<input id="closest" type="hidden" name="closest">
 		<ul class="select" data-storage="closest">
 			<li class="selected">All</li>
 			<li id="opt-fu">FU</li>
-			<li id="opt-tu">TU</li>
+			<li id="opt-tu">Boxy</li>
 			<li id="opt-hu">HU</li>
-		</ul>
-		<b>What do we like?</b><br>
-
-
-		<ul class="select" data-storage="closest">
-			<input type="checkbox" id="balcony" name="balcony" class="hidden">
-			<label for="balcony">balcon<b>y</b></label>
-			<input type="checkbox" id="balconies" name="balconies" class="hidden">
-			<label for="balconies">balcon<b>ies</b></label>
-			<input type="checkbox" id="washingmachine" name="washingmachine" class="hidden">
-			<label for="washingmachine">washing machine</label>
-			<input type="checkbox" id="ebk" name="ebk" checked class="hidden">
-			<label for="ebk">fitted kitchen</label>
 		</ul>
 
 		<br><br>
 
 		<div class="btns">
-			<input type="button" name="german" value="German" onClick="germanText(this.form)">
-			<input type="button" name="english" value="English" onClick="englishText(this.form)">
+			<input type="button" name="noWBS" value="noWBS" onClick="Text(this.form,true)">
+			<input type="button" name="WBS" value="WBS" onClick="Text(this.form,false)">
 			<input type="button" name="clear" value="Clear textbox" onClick="document.getElementById('editor').innerText=''">
 		</div>
 	</form><br><br>
