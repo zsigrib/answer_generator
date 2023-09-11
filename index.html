@@ -32,10 +32,10 @@
 
 		function greeting(){
 			time=new Date().toLocaleTimeString()
-			if(5<Number(time.substring(0,2)) && time.endsWith("AM")){
+			if(5<Number(time.split(":")[0]) && time.endsWith("AM")){
 				return "Morning"
 			}
-			if(7>Number(time.substring(0,2)) && time.endsWith("PM")){
+			if(7>Number(time.split(":")[0]) && time.endsWith("PM")){
 				return "Afternoon"
 			}else return "Evening"
 		}
@@ -75,10 +75,10 @@
 
 		function germanGreeting(){
 			time=new Date().toLocaleTimeString()
-			if(5<Number(time.substring(0,2)) && time.endsWith("AM")){
+			if(5<Number(time.split(":")[0]) && time.endsWith("AM")){
 				return "Morgen"
 			}
-			if(7>Number(time.substring(0,2)) && time.endsWith("PM")){
+			if(7>Number(time.split(":")[0]) && time.endsWith("PM")){
 				return "Tag"
 			}else return "Abend"
 		}
@@ -116,8 +116,8 @@
 
 		function Text(form,noWbs){
 
-
-			messageString=`----------------Deutsch unter---------------------
+			messageString=``
+			if(form.wbsite.value!="Immobilienscout")messageString=`----------------Deutsch unter---------------------
 Good ${greeting()} ${form.salutation.value} ${form.recipient.value},
 
 I am Adam Schweitzer, a university student studying theoretical mathematics in Berlin in a joint graduate scholarship program.
@@ -133,8 +133,10 @@ Thank you for your time, ${form.salutation.value} ${form.recipient.value}.
 
 Kind regards,
 Adam Schweitzer
------------------------------------------------------
-Guten ${germanGreeting()} ${germanSal(form.salutation.value)} ${form.recipient.value},
+-----------------------------------------------------`
+
+
+			messageString+=`Guten ${germanGreeting()} ${germanSal(form.salutation.value)} ${form.recipient.value},
 
 Ich bin Adam Schweitzer, Student der Theoretischen Mathematik in Berlin im Rahmen eines gemeinsamen Graduiertenstipendiums.
 Ich bin sehr interessiert an ${germanIntrodution(form)}. Ich bin 23 Jahre alt, rauche nicht und habe keine Haustiere. Ich suche eine ruhige Wohnung, in der ich mich auf mein Studium konzentrieren kann. Ich bin sehr glücklich, die Ausstattung der Küche zu sehen, da ich gerne koche! ${germanProximity(form)}
@@ -159,8 +161,8 @@ Adam Schweitzer
 
 		function cannedText(form,noWbs){
 
-
-			messageString=`----------------Deutsch unter---------------------
+			messageString=``
+			if(form.wbsite.value!="Immobilienscout")messageString=`----------------Deutsch unter---------------------
 Good ${greeting()},
 
 I am Adam Schweitzer, a university student studying theoretical mathematics in Berlin in a joint graduate scholarship program.
@@ -176,8 +178,9 @@ Thank you for your time.
 
 Kind regards,
 Adam Schweitzer
------------------------------------------------------
-Guten ${germanGreeting()},
+-----------------------------------------------------`
+
+			messageString+=`Guten ${germanGreeting()},
 
 Ich bin Adam Schweitzer, Student der Theoretischen Mathematik in Berlin im Rahmen eines gemeinsamen Graduiertenstipendiums.
 Ich bin sehr interessiert an ${germanIntrodution(form)}. Ich bin 23 Jahre alt, rauche nicht und habe keine Haustiere. Ich suche eine ruhige Wohnung, in der ich mich auf mein Studium konzentrieren kann. Ich bin sehr glücklich, die Ausstattung der Küche zu sehen, da ich gerne koche! ${germanProximity(form)}
