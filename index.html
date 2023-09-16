@@ -32,10 +32,10 @@
 
 		function greeting(){
 			time=new Date().toLocaleTimeString()
-			if(5<Number(time.split(":")[0]) && time.endsWith("AM")){
+			if(5<Number(time.split(":")[0]) && 12!=Number(time.split(":")[0]) && time.endsWith("AM")){
 				return "Morning"
 			}
-			if(7>Number(time.split(":")[0]) && time.endsWith("PM")){
+			if((7>Number(time.split(":")[0]) || 12==Number(time.split(":")[0])) && time.endsWith("PM")){
 				return "Afternoon"
 			}else return "Evening"
 		}
@@ -75,10 +75,10 @@
 
 		function germanGreeting(){
 			time=new Date().toLocaleTimeString()
-			if(5<Number(time.split(":")[0]) && time.endsWith("AM")){
+			if(5<Number(time.split(":")[0]) && 12!=Number(time.split(":")[0]) && time.endsWith("AM")){
 				return "Morgen"
 			}
-			if(7>Number(time.split(":")[0]) && time.endsWith("PM")){
+			if((7>Number(time.split(":")[0]) || 12==Number(time.split(":")[0])) && time.endsWith("PM")){
 				return "Tag"
 			}else return "Abend"
 		}
