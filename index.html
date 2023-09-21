@@ -120,7 +120,7 @@
 
 
 			messageString=``
-			if(form.website.value!="Immobilienscout" && form.website.value!="Immowelt")messageString=`----------------Deutsch unter---------------------
+			if(form.both.checked)messageString=`----------------Deutsch unter---------------------
 Good ${greeting()} ${form.salutation.value} ${form.recipient.value},
 
 I am Adam Schweitzer, a university student studying theoretical mathematics in Berlin in a joint graduate scholarship program.
@@ -166,7 +166,7 @@ Adam Schweitzer
 		function cannedText(form,noWbs){
 
 			messageString=``
-			if(form.website.value!="Immobilienscout" && form.website.value!="Immowelt")messageString=`----------------Deutsch unter---------------------
+			if(form.both.checked)messageString=`----------------Deutsch unter---------------------
 Good ${greeting()},
 
 I am Adam Schweitzer, a university student studying theoretical mathematics in Berlin in a joint graduate scholarship program.
@@ -443,6 +443,13 @@ Adam Schweitzer
 			<li id="opt-tu">Boxy</li>
 			<li id="opt-hu">HU</li>
 		</ul>
+
+        <b>Both languages?</b><br>
+
+            <ul class="select" data-storage="both">
+                <input type="checkbox" id="both" name="both" class="hidden">
+                <label for="both">both languages</label>
+            </ul>
 
 		<br><br>
 
